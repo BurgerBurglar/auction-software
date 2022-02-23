@@ -1,5 +1,6 @@
 import type { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
+import OverviewTable from "../component/OverviewTable";
 import { getOverview } from "../prisma/queries";
 import { Overview } from "../types";
 
@@ -18,13 +19,13 @@ const Home: NextPage<Props> = ({ overviews }) => {
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <pre>{JSON.stringify(overviews, null, 2)}</pre>
+      <OverviewTable overviews={overviews} />
     </>
   );
 };
 
 export const getStaticProps: GetStaticProps<Props> = async () => {
-  const overviews: Overview[] = await getOverview();
+  const overviews = await getOverview();
 
   return {
     props: {
