@@ -1,10 +1,12 @@
-generator client {
-  provider = "prisma-client-js"
+generator js {
+  provider        = "prisma-client-js"
+  previewFeatures = ["referentialIntegrity"]
 }
 
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
+  provider             = "mysql"
+  url                  = env("DATABASE_URL")
+  referentialIntegrity = "prisma"
 }
 
 model ilance_buynow_orders {
@@ -68,13 +70,16 @@ model ilance_projects {
   escrow_id               Int                                   @default(0)
   cid                     Int                                   @default(0)
   description             String?                               @db.MediumText
-  ishtml                  ilance_projects_ishtml                @default(dbgenerated("0"))
+  ishtml                  ilance_projects_ishtml
   description_videourl    String?                               @db.MediumText
   date_added              DateTime                              @default(dbgenerated("'1970-01-01 00:00:00'")) @db.DateTime(0)
   date_starts             DateTime                              @default(dbgenerated("'1970-01-01 00:00:00'")) @db.DateTime(0)
   date_end                DateTime                              @default(dbgenerated("'1970-01-01 00:00:00'")) @db.DateTime(0)
   gtc                     Int                                   @default(0)
   gtc_cancelled           DateTime                              @default(dbgenerated("'1970-01-01 00:00:00'")) @db.DateTime(0)
+  user                    ilance_users                          @relation(fields: [user_id], references: [user_id])
+  category_id             Int                                   @default(1)
+  category                Category                              @relation(fields: [category_id], references: [category_id])
   user_id                 Int                                   @default(0)
   visible                 Int                                   @default(0)
   views                   Int                                   @default(0)
@@ -97,20 +102,20 @@ model ilance_projects {
   project_type            ilance_projects_project_type          @default(reverse)
   project_state           ilance_projects_project_state         @default(service)
   bid_details             ilance_projects_bid_details           @default(open)
-  filter_rating           ilance_projects_filter_rating         @default(dbgenerated("0"))
-  filter_country          ilance_projects_filter_country        @default(dbgenerated("0"))
-  filter_state            ilance_projects_filter_state          @default(dbgenerated("0"))
-  filter_city             ilance_projects_filter_city           @default(dbgenerated("0"))
-  filter_zip              ilance_projects_filter_zip            @default(dbgenerated("0"))
-  filter_underage         ilance_projects_filter_underage       @default(dbgenerated("0"))
-  filter_businessnumber   ilance_projects_filter_businessnumber @default(dbgenerated("0"))
-  filter_bidtype          ilance_projects_filter_bidtype        @default(dbgenerated("0"))
-  filter_budget           ilance_projects_filter_budget         @default(dbgenerated("0"))
+  filter_rating           ilance_projects_filter_rating
+  filter_country          ilance_projects_filter_country
+  filter_state            ilance_projects_filter_state
+  filter_city             ilance_projects_filter_city
+  filter_zip              ilance_projects_filter_zip
+  filter_underage         ilance_projects_filter_underage
+  filter_businessnumber   ilance_projects_filter_businessnumber
+  filter_bidtype          ilance_projects_filter_bidtype
+  filter_budget           ilance_projects_filter_budget
   filter_escrow           Int                                   @default(0)
   filter_gateway          Int                                   @default(0)
   filter_ccgateway        Int                                   @default(0)
   filter_offline          Int                                   @default(0)
-  filter_publicboard      ilance_projects_filter_publicboard    @default(dbgenerated("0"))
+  filter_publicboard      ilance_projects_filter_publicboard
   filtered_rating         ilance_projects_filtered_rating       @default(dbgenerated("1"))
   filtered_country        String                                @default("") @db.VarChar(50)
   filtered_state          String                                @default("") @db.VarChar(50)
@@ -159,7 +164,7 @@ model ilance_projects {
   enhancementfeeinvoiceid Int                                   @default(0)
   fvfinvoiceid            Int                                   @default(0)
   returnaccepted          Int                                   @default(0)
-  returnwithin            ilance_projects_returnwithin          @default(dbgenerated("0"))
+  returnwithin            ilance_projects_returnwithin
   returngivenas           ilance_projects_returngivenas         @default(none)
   returnshippaidby        ilance_projects_returnshippaidby      @default(none)
   returnpolicy            String?                               @db.MediumText
@@ -332,6 +337,7 @@ model ilance_users {
   store                Int                      @default(0)
   store_pay            Int                      @default(0)
 
+  ilance_projects ilance_projects[]
   @@index([city], map: "city")
   @@index([country], map: "country")
   @@index([email], map: "email")
@@ -346,6 +352,12 @@ model ilance_users {
   @@index([status], map: "status")
   @@index([username], map: "username")
   @@index([zip_code], map: "zip_code")
+}
+
+model Category {
+  category_id     Int               @id @default(autoincrement())
+  name            String
+  ilance_projects ilance_projects[]
 }
 
 enum ilance_buynow_orders_status {
