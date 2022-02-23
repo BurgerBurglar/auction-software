@@ -1,0 +1,565 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model ilance_buynow_orders {
+  orderid                   Int                         @id @default(autoincrement())
+  parentid                  Int                         @default(0)
+  project_id                Int                         @default(0)
+  buyer_id                  Int                         @default(0)
+  owner_id                  Int                         @default(0)
+  invoiceid                 Int                         @default(0)
+  attachid                  Int                         @default(0)
+  qty                       Int                         @default(1)
+  amount                    Float                       @default(0.00)
+  salestax                  Float                       @default(0.00)
+  salestaxstate             String                      @default("") @db.VarChar(250)
+  salestaxrate              String                      @default("0") @db.VarChar(10)
+  salestaxshipping          Int                         @default(0)
+  escrowfee                 Float                       @default(0.00)
+  escrowfeebuyer            Float                       @default(0.00)
+  fvf                       Float                       @default(0.00)
+  fvfbuyer                  Float                       @default(0.00)
+  isescrowfeepaid           Int                         @default(0)
+  isescrowfeebuyerpaid      Int                         @default(0)
+  isfvfpaid                 Int                         @default(0)
+  isfvfbuyerpaid            Int                         @default(0)
+  escrowfeeinvoiceid        Int                         @default(0)
+  escrowfeebuyerinvoiceid   Int                         @default(0)
+  fvfinvoiceid              Int                         @default(0)
+  fvfbuyerinvoiceid         Int                         @default(0)
+  ship_required             Int                         @default(1)
+  ship_location             String?                     @db.MediumText
+  orderdate                 DateTime                    @default(dbgenerated("'1970-01-01 00:00:00'")) @db.DateTime(0)
+  canceldate                DateTime                    @default(dbgenerated("'1970-01-01 00:00:00'")) @db.DateTime(0)
+  arrivedate                DateTime                    @default(dbgenerated("'1970-01-01 00:00:00'")) @db.DateTime(0)
+  paiddate                  DateTime                    @default(dbgenerated("'1970-01-01 00:00:00'")) @db.DateTime(0)
+  releasedate               DateTime                    @default(dbgenerated("'1970-01-01 00:00:00'")) @db.DateTime(0)
+  winnermarkedaspaid        Int                         @default(0)
+  winnermarkedaspaiddate    DateTime                    @default(dbgenerated("'1970-01-01 00:00:00'")) @db.DateTime(0)
+  winnermarkedaspaidmethod  String?                     @db.MediumText
+  buyerpaymethod            String                      @default("") @db.VarChar(250)
+  buyershipcost             Float                       @default(0.00)
+  buyershipperid            Int                         @default(0)
+  sellermarkedasshipped     Int                         @default(0)
+  sellermarkedasshippeddate DateTime                    @default(dbgenerated("'1970-01-01 00:00:00'")) @db.DateTime(0)
+  shiptracknumber           String                      @default("") @db.VarChar(250)
+  buyerfeedback             Int                         @default(0)
+  sellerfeedback            Int                         @default(0)
+  status                    ilance_buynow_orders_status @default(paid)
+
+  @@index([attachid], map: "attachid")
+  @@index([buyer_id], map: "buyer_id")
+  @@index([invoiceid], map: "invoiceid")
+  @@index([owner_id], map: "owner_id")
+  @@index([parentid], map: "parentid")
+  @@index([project_id], map: "project_id")
+  @@index([status], map: "status")
+}
+
+model ilance_projects {
+  id                      Int                                   @id @default(autoincrement())
+  project_id              Int                                   @default(0)
+  escrow_id               Int                                   @default(0)
+  cid                     Int                                   @default(0)
+  description             String?                               @db.MediumText
+  ishtml                  ilance_projects_ishtml                @default(dbgenerated("0"))
+  description_videourl    String?                               @db.MediumText
+  date_added              DateTime                              @default(dbgenerated("'1970-01-01 00:00:00'")) @db.DateTime(0)
+  date_starts             DateTime                              @default(dbgenerated("'1970-01-01 00:00:00'")) @db.DateTime(0)
+  date_end                DateTime                              @default(dbgenerated("'1970-01-01 00:00:00'")) @db.DateTime(0)
+  gtc                     Int                                   @default(0)
+  gtc_cancelled           DateTime                              @default(dbgenerated("'1970-01-01 00:00:00'")) @db.DateTime(0)
+  user_id                 Int                                   @default(0)
+  visible                 Int                                   @default(0)
+  views                   Int                                   @default(0)
+  project_title           String                                @default("") @db.VarChar(250)
+  bids                    Int                                   @default(0)
+  bidsdeclined            Int                                   @default(0)
+  bidsretracted           Int                                   @default(0)
+  bidsshortlisted         Int                                   @default(0)
+  budgetgroup             String                                @default("") @db.VarChar(30)
+  additional_info         String?                               @db.MediumText
+  status                  ilance_projects_status                @default(draft)
+  close_date              DateTime                              @default(dbgenerated("'1970-01-01 00:00:00'")) @db.DateTime(0)
+  transfertype            ilance_projects_transfertype          @default(userid)
+  transfer_to_userid      Int                                   @default(0)
+  transfer_from_userid    Int                                   @default(0)
+  transfer_to_email       String                                @default("") @db.VarChar(50)
+  transfer_status         ilance_projects_transfer_status       @default(EMPTY_ENUM_VALUE)
+  transfer_code           String                                @default("") @db.VarChar(32)
+  project_details         ilance_projects_project_details       @default(public)
+  project_type            ilance_projects_project_type          @default(reverse)
+  project_state           ilance_projects_project_state         @default(service)
+  bid_details             ilance_projects_bid_details           @default(open)
+  filter_rating           ilance_projects_filter_rating         @default(dbgenerated("0"))
+  filter_country          ilance_projects_filter_country        @default(dbgenerated("0"))
+  filter_state            ilance_projects_filter_state          @default(dbgenerated("0"))
+  filter_city             ilance_projects_filter_city           @default(dbgenerated("0"))
+  filter_zip              ilance_projects_filter_zip            @default(dbgenerated("0"))
+  filter_underage         ilance_projects_filter_underage       @default(dbgenerated("0"))
+  filter_businessnumber   ilance_projects_filter_businessnumber @default(dbgenerated("0"))
+  filter_bidtype          ilance_projects_filter_bidtype        @default(dbgenerated("0"))
+  filter_budget           ilance_projects_filter_budget         @default(dbgenerated("0"))
+  filter_escrow           Int                                   @default(0)
+  filter_gateway          Int                                   @default(0)
+  filter_ccgateway        Int                                   @default(0)
+  filter_offline          Int                                   @default(0)
+  filter_publicboard      ilance_projects_filter_publicboard    @default(dbgenerated("0"))
+  filtered_rating         ilance_projects_filtered_rating       @default(dbgenerated("1"))
+  filtered_country        String                                @default("") @db.VarChar(50)
+  filtered_state          String                                @default("") @db.VarChar(50)
+  filtered_city           String                                @default("") @db.VarChar(20)
+  filtered_zip            String                                @default("") @db.VarChar(10)
+  filter_bidlimit         Int                                   @default(0)
+  filtered_bidlimit       Int                                   @default(10)
+  filtered_bidtype        ilance_projects_filtered_bidtype      @default(entire)
+  filtered_bidtypecustom  String                                @default("") @db.VarChar(250)
+  filtered_budgetid       Int                                   @default(0)
+  filtered_auctiontype    ilance_projects_filtered_auctiontype  @default(regular)
+  classified_phone        String                                @default("") @db.VarChar(32)
+  classified_price        Float                                 @default(0.00)
+  urgent                  Int                                   @default(0)
+  buynow                  Int                                   @default(0)
+  buynow_price            Float                                 @default(0.00)
+  buynow_qty              Int                                   @default(0)
+  buynow_qty_lot          Int                                   @default(0)
+  items_in_lot            Int                                   @default(0) @db.UnsignedMediumInt
+  buynow_purchases        Int                                   @default(0)
+  reserve                 Int                                   @default(0)
+  reserve_price           Float                                 @default(0.00)
+  featured                Int                                   @default(0)
+  featured_date           DateTime                              @default(dbgenerated("'1970-01-01 00:00:00'")) @db.DateTime(0)
+  featured_searchresults  Int                                   @default(0)
+  highlite                Int                                   @default(0)
+  bold                    Int                                   @default(0)
+  autorelist              Int                                   @default(0)
+  autorelist_date         DateTime                              @default(dbgenerated("'1970-01-01 00:00:00'")) @db.DateTime(0)
+  startprice              Float                                 @default(0.00)
+  retailprice             Float                                 @default(0.00)
+  uniquebidcount          Int                                   @default(0)
+  paymethod               String?                               @db.MediumText
+  paymethodcc             String?                               @db.MediumText
+  paymethodoptions        String?                               @db.MediumText
+  paymethodoptionsemail   String?                               @db.MediumText
+  keywords                String                                @default("") @db.VarChar(250)
+  currentprice            Float                                 @default(0.00)
+  insertionfee            Float                                 @default(0.00)
+  enhancementfee          Float                                 @default(0.00)
+  fvf                     Float                                 @default(0.00)
+  isfvfpaid               Int                                   @default(0)
+  isifpaid                Int                                   @default(0)
+  isenhancementfeepaid    Int                                   @default(0)
+  ifinvoiceid             Int                                   @default(0)
+  enhancementfeeinvoiceid Int                                   @default(0)
+  fvfinvoiceid            Int                                   @default(0)
+  returnaccepted          Int                                   @default(0)
+  returnwithin            ilance_projects_returnwithin          @default(dbgenerated("0"))
+  returngivenas           ilance_projects_returngivenas         @default(none)
+  returnshippaidby        ilance_projects_returnshippaidby      @default(none)
+  returnpolicy            String?                               @db.MediumText
+  buyerfeedback           Int                                   @default(0)
+  sellerfeedback          Int                                   @default(0)
+  hasimage                Int                                   @default(0)
+  hasimageslideshow       Int                                   @default(0)
+  hasdigitalfile          Int                                   @default(0)
+  haswinner               Int                                   @default(0)
+  hasbuynowwinner         Int                                   @default(0)
+  winner_user_id          Int                                   @default(0)
+  donation                Int                                   @default(0)
+  charityid               Int                                   @default(0)
+  donationpercentage      Int                                   @default(0)
+  donermarkedaspaid       Int                                   @default(0)
+  donermarkedaspaiddate   DateTime                              @default(dbgenerated("'1970-01-01 00:00:00'")) @db.DateTime(0)
+  donationinvoiceid       Int                                   @default(0)
+  currencyid              Int                                   @default(0)
+  countryid               Int                                   @default(0)
+  country                 String                                @default("") @db.VarChar(250)
+  state                   String                                @default("") @db.VarChar(250)
+  city                    String                                @default("") @db.VarChar(250)
+  zipcode                 String                                @default("") @db.VarChar(50)
+  sku                     String                                @default("") @db.VarChar(250)
+  upc                     String                                @default("") @db.VarChar(250)
+  ean                     String                                @default("") @db.VarChar(250)
+  isbn10                  String                                @default("") @db.VarChar(250)
+  isbn13                  String                                @default("") @db.VarChar(250)
+  partnumber              String                                @default("") @db.VarChar(250)
+  modelnumber             String                                @default("") @db.VarChar(250)
+  salestaxstate           String                                @default("") @db.VarChar(250)
+  salestaxrate            String                                @default("0") @db.VarChar(10)
+  salestaxentirecountry   Int                                   @default(0)
+  salestaxshipping        Int                                   @default(0)
+  countdownresets         Int                                   @default(0)
+  bulkid                  Int                                   @default(0)
+  updateid                Int                                   @default(1)
+  storeid                 Int                                   @default(0)
+  itemcondition           String?                               @db.MediumText
+  imageurl                String?                               @db.MediumText
+  imageurl_attachid       Int                                   @default(0)
+  download_attachid       Int                                   @default(0)
+  itemstatus              Int                                   @default(1)
+  storecid                Int                                   @default(0)
+  tags                    String                                @db.VarChar(100)
+  genre                   String                                @db.VarChar(100)
+
+  @@index([charityid], map: "charityid")
+  @@index([cid], map: "cid")
+  @@index([countryid], map: "countryid")
+  @@index([hasdigitalfile], map: "hasdigitalfile")
+  @@index([hasimage], map: "hasimage")
+  @@index([hasimageslideshow], map: "hasimageslideshow")
+  @@index([isbn10], map: "isbn10")
+  @@index([isbn13], map: "isbn13")
+  @@index([modelnumber], map: "modelnumber")
+  @@index([partnumber], map: "partnumber")
+  @@index([project_details], map: "project_details")
+  @@index([project_id], map: "project_id")
+  @@index([project_state], map: "project_state")
+  @@index([project_title], map: "project_title")
+  @@index([project_type], map: "project_type")
+  @@index([sku], map: "sku")
+  @@index([status], map: "status")
+  @@index([zipcode], map: "zipcode")
+}
+
+model ilance_subscription_user {
+  id             Int                                   @id @default(autoincrement())
+  subscriptionid Int                                   @default(1)
+  user_id        Int                                   @default(-1)
+  paymethod      ilance_subscription_user_paymethod    @default(account)
+  startdate      DateTime                              @default(dbgenerated("'1970-01-01 00:00:00'")) @db.DateTime(0)
+  renewdate      DateTime                              @default(dbgenerated("'1970-01-01 00:00:00'")) @db.DateTime(0)
+  autopayment    Int                                   @default(1)
+  autorenewal    ilance_subscription_user_autorenewal  @default(dbgenerated("1"))
+  active         ilance_subscription_user_active       @default(no)
+  cancelled      Int                                   @default(0)
+  migrateto      Int                                   @default(0)
+  migratelogic   ilance_subscription_user_migratelogic @default(none)
+  recurring      Int                                   @default(0)
+  invoiceid      Int                                   @default(0)
+  roleid         Int                                   @default(-1)
+
+  @@index([active], map: "active")
+  @@index([invoiceid], map: "invoiceid")
+  @@index([migratelogic], map: "migratelogic")
+  @@index([paymethod], map: "paymethod")
+  @@index([subscriptionid], map: "subscriptionid")
+  @@index([user_id], map: "user_id")
+}
+
+model ilance_users {
+  user_id              Int                      @id @default(autoincrement())
+  ipaddress            String                   @default("") @db.VarChar(25)
+  iprestrict           Int                      @default(0)
+  username             String                   @default("") @db.VarChar(50)
+  password             String                   @default("") @db.VarChar(32)
+  salt                 String                   @default("") @db.VarChar(5)
+  secretquestion       String                   @default("") @db.VarChar(200)
+  secretanswer         String                   @default("") @db.VarChar(32)
+  email                String                   @default("") @db.VarChar(60)
+  first_name           String                   @default("") @db.VarChar(100)
+  last_name            String                   @default("") @db.VarChar(100)
+  address              String                   @default("") @db.VarChar(200)
+  address2             String?                  @db.VarChar(200)
+  city                 String                   @default("") @db.VarChar(100)
+  state                String                   @default("") @db.VarChar(100)
+  zip_code             String                   @default("") @db.VarChar(10)
+  phone                String                   @default("") @db.VarChar(20)
+  country              Int                      @default(500)
+  date_added           DateTime                 @default(dbgenerated("'1970-01-01 00:00:00'")) @db.DateTime(0)
+  subcategories        String?                  @db.MediumText
+  status               ilance_users_status      @default(active)
+  serviceawards        Int                      @default(0)
+  productawards        Int                      @default(0)
+  servicesold          Int                      @default(0)
+  productsold          Int                      @default(0)
+  rating               Float                    @default(0)
+  score                Int                      @default(0)
+  feedback             Float                    @default(0)
+  bidstoday            Int                      @default(0)
+  bidsthismonth        Int                      @default(0)
+  auctiondelists       Int                      @default(0)
+  bidretracts          Int                      @default(0)
+  lastseen             DateTime                 @default(dbgenerated("'1970-01-01 00:00:00'")) @db.DateTime(0)
+  dob                  DateTime                 @default(dbgenerated("'1970-01-01'")) @db.Date
+  rid                  String                   @default("") @db.VarChar(10)
+  account_number       String                   @default("") @db.VarChar(25)
+  available_balance    Float                    @default(0.00)
+  total_balance        Float                    @default(0.00)
+  income_reported      Float                    @default(0.00)
+  income_spent         Float                    @default(0.00)
+  startpage            String                   @default("main") @db.VarChar(250)
+  styleid              Int
+  project_distance     Int                      @default(1)
+  currency_calculation Int                      @default(1)
+  languageid           Int
+  currencyid           Int
+  timezone             String                   @db.VarChar(250)
+  notifyservices       Int
+  notifyproducts       Int
+  notifyservicescats   String?                  @db.MediumText
+  notifyproductscats   String?                  @db.MediumText
+  lastemailservicecats DateTime                 @default(dbgenerated("'1970-01-01'")) @db.Date
+  lastemailproductcats DateTime                 @default(dbgenerated("'1970-01-01'")) @db.Date
+  displayprofile       Int
+  emailnotify          Int
+  displayfinancials    Int
+  vatnumber            String                   @db.VarChar(250)
+  regnumber            String                   @db.VarChar(250)
+  dnbnumber            String                   @db.VarChar(250)
+  companyname          String                   @db.VarChar(100)
+  usecompanyname       Int
+  timeonsite           Int
+  daysonsite           Int
+  isadmin              Int                      @default(0)
+  permissions          String?                  @db.MediumText
+  searchoptions        String?                  @db.MediumText
+  rateperhour          Float                    @default(0.00)
+  profilevideourl      String?                  @db.MediumText
+  profileintro         String?                  @db.MediumText
+  gender               ilance_users_gender      @default(EMPTY_ENUM_VALUE)
+  freelancing          ilance_users_freelancing @default(EMPTY_ENUM_VALUE)
+  autopayment          Int                      @default(1)
+  posthtml             Int                      @default(0)
+  username_history     String?                  @db.MediumText
+  password_lastchanged DateTime                 @default(dbgenerated("'1970-01-01 00:00:00'")) @db.DateTime(0)
+  role                 Int                      @default(0)
+  store                Int                      @default(0)
+  store_pay            Int                      @default(0)
+
+  @@index([city], map: "city")
+  @@index([country], map: "country")
+  @@index([email], map: "email")
+  @@index([first_name], map: "first_name")
+  @@index([freelancing], map: "freelancing")
+  @@index([gender], map: "gender")
+  @@index([last_name], map: "last_name")
+  @@index([rating], map: "rating")
+  @@index([score], map: "score")
+  @@index([serviceawards], map: "serviceawards")
+  @@index([state], map: "state")
+  @@index([status], map: "status")
+  @@index([username], map: "username")
+  @@index([zip_code], map: "zip_code")
+}
+
+enum ilance_buynow_orders_status {
+  paid
+  cancelled
+  pending_delivery
+  delivered
+  fraud
+  offline
+  offline_delivered
+}
+
+enum ilance_projects_ishtml {
+  false  @map("0")
+  true   @map("1")
+}
+
+enum ilance_projects_status {
+  draft
+  open
+  closed
+  expired
+  delisted
+  wait_approval
+  approval_accepted
+  frozen
+  finished
+  archived
+}
+
+enum ilance_projects_transfertype {
+  userid
+  email
+}
+
+enum ilance_projects_transfer_status {
+  EMPTY_ENUM_VALUE  @map("")
+  pending
+  accepted
+  rejected
+}
+
+enum ilance_projects_project_details {
+  public
+  invite_only
+  realtime
+  unique
+  penny
+}
+
+enum ilance_projects_project_type {
+  reverse
+  forward
+}
+
+enum ilance_projects_project_state {
+  service
+  product
+}
+
+enum ilance_projects_bid_details {
+  open
+  sealed
+  blind
+  full
+}
+
+enum ilance_projects_filter_rating {
+  false  @map("0")
+  true   @map("1")
+}
+
+enum ilance_projects_filter_country {
+  false  @map("0")
+  true   @map("1")
+}
+
+enum ilance_projects_filter_state {
+  false  @map("0")
+  true   @map("1")
+}
+
+enum ilance_projects_filter_city {
+  false  @map("0")
+  true   @map("1")
+}
+
+enum ilance_projects_filter_zip {
+  false  @map("0")
+  true   @map("1")
+}
+
+enum ilance_projects_filter_underage {
+  false  @map("0")
+  true   @map("1")
+}
+
+enum ilance_projects_filter_businessnumber {
+  false  @map("0")
+  true   @map("1")
+}
+
+enum ilance_projects_filter_bidtype {
+  false  @map("0")
+  true   @map("1")
+}
+
+enum ilance_projects_filter_budget {
+  false  @map("0")
+  true   @map("1")
+}
+
+enum ilance_projects_filter_publicboard {
+  false  @map("0")
+  true   @map("1")
+}
+
+enum ilance_projects_filtered_rating {
+  vaLue_1  @map("1")
+  vaLue_2  @map("2")
+  vaLue_3  @map("3")
+  vaLue_4  @map("4")
+  vaLue_5  @map("5")
+}
+
+enum ilance_projects_filtered_bidtype {
+  entire
+  hourly
+  daily
+  weekly
+  monthly
+  lot
+  weight
+  item
+}
+
+enum ilance_projects_filtered_auctiontype {
+  regular
+  fixed
+  classified
+}
+
+enum ilance_projects_returnwithin {
+  value_0   @map("0")
+  value_3   @map("3")
+  value_7   @map("7")
+  value_14  @map("14")
+  value_30  @map("30")
+  value_60  @map("60")
+}
+
+enum ilance_projects_returngivenas {
+  none
+  exchange
+  credit
+  moneyback
+}
+
+enum ilance_projects_returnshippaidby {
+  none
+  buyer
+  seller
+}
+
+enum ilance_subscription_user_paymethod {
+  account
+  bank
+  visa
+  amex
+  mc
+  disc
+  paypal
+  paypal_pro
+  check
+  stormpay
+  cashu
+  moneybookers
+}
+
+enum ilance_subscription_user_autorenewal {
+  false  @map("0")
+  true   @map("1")
+}
+
+enum ilance_subscription_user_active {
+  yes
+  no
+  cancelled
+}
+
+enum ilance_subscription_user_migratelogic {
+  none
+  waived
+  unpaid
+  paid
+}
+
+enum ilance_users_status {
+  active
+  suspended
+  cancelled
+  unverified
+  banned
+  moderated
+}
+
+enum ilance_users_gender {
+  EMPTY_ENUM_VALUE  @map("")
+  male
+  female
+}
+
+enum ilance_users_freelancing {
+  EMPTY_ENUM_VALUE  @map("")
+  individual
+  business
+}
