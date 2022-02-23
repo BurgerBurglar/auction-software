@@ -359,8 +359,8 @@ enum ilance_buynow_orders_status {
 }
 
 enum ilance_projects_ishtml {
-  false  @map("0")
-  true   @map("1")
+  value_0  @map("0")
+  value_1  @map("1")
 }
 
 enum ilance_projects_status {
@@ -414,53 +414,53 @@ enum ilance_projects_bid_details {
 }
 
 enum ilance_projects_filter_rating {
-  false  @map("0")
-  true   @map("1")
+  value_0  @map("0")
+  value_1  @map("1")
 }
 
 enum ilance_projects_filter_country {
-  false  @map("0")
-  true   @map("1")
+  value_0  @map("0")
+  value_1  @map("1")
 }
 
 enum ilance_projects_filter_state {
-  false  @map("0")
-  true   @map("1")
+  value_0  @map("0")
+  value_1  @map("1")
 }
 
 enum ilance_projects_filter_city {
-  false  @map("0")
-  true   @map("1")
+  value_0  @map("0")
+  value_1  @map("1")
 }
 
 enum ilance_projects_filter_zip {
-  false  @map("0")
-  true   @map("1")
+  value_0  @map("0")
+  value_1  @map("1")
 }
 
 enum ilance_projects_filter_underage {
-  false  @map("0")
-  true   @map("1")
+  value_0  @map("0")
+  value_1  @map("1")
 }
 
 enum ilance_projects_filter_businessnumber {
-  false  @map("0")
-  true   @map("1")
+  value_0  @map("0")
+  value_1  @map("1")
 }
 
 enum ilance_projects_filter_bidtype {
-  false  @map("0")
-  true   @map("1")
+  value_0  @map("0")
+  value_1  @map("1")
 }
 
 enum ilance_projects_filter_budget {
-  false  @map("0")
-  true   @map("1")
+  value_0  @map("0")
+  value_1  @map("1")
 }
 
 enum ilance_projects_filter_publicboard {
-  false  @map("0")
-  true   @map("1")
+  value_0  @map("0")
+  value_1  @map("1")
 }
 
 enum ilance_projects_filtered_rating {
@@ -526,8 +526,8 @@ enum ilance_subscription_user_paymethod {
 }
 
 enum ilance_subscription_user_autorenewal {
-  false  @map("0")
-  true   @map("1")
+  value_0  @map("0")
+  value_1  @map("1")
 }
 
 enum ilance_subscription_user_active {
