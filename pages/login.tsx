@@ -40,9 +40,18 @@ const Login: NextPage<Props> = () => {
   const handleForgot = () => {
     toast({
       status: "error",
-      title: "Yeah that doesn't work.",
+      title: "Yeah, that doesn't work.",
       description:
         "This is a job interview project. Ain't no time for implementing emails.",
+      isClosable: true,
+    });
+  };
+
+  const toastLoginError = (message: string) => {
+    toast({
+      status: "error",
+      title: "That didn't work.",
+      description: message,
       isClosable: true,
     });
   };
@@ -58,7 +67,8 @@ const Login: NextPage<Props> = () => {
       router.push("/welcome");
     } catch (err) {
       if (!axios.isAxiosError(err)) return;
-      console.log(err.response?.data.error);
+      const message: string = err.response?.data.error;
+      toastLoginError(message);
     }
   };
 
