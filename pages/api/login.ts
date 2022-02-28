@@ -19,7 +19,7 @@ const ok = (user: any, res: NextApiResponse) => {
 const loginRoute = async (req: NextApiRequest, res: NextApiResponse) => {
   const { usernameOrEmail, password } = req.body;
   if (usernameOrEmail === "test") {
-    ok({ username: "test", first_name: "test", last_name: "test" }, res);
+    ok({ username: "test", first_name: "Rajesh", last_name: "Rajaram" }, res);
   }
 
   try {
