@@ -7,9 +7,10 @@ const validateAuth = async (usernameOrEmail: string, password: string) => {
   const user = await prisma.ilance_users.findFirst({
     where: { [validationColumn]: usernameOrEmail },
   });
-  if (!user) return false;
+  if (!user) throw new Error("User not found");
 
   const hashedPassword = md5(md5(password) + user.salt);
-  return hashedPassword === user.password;
+  if (hashedPassword !== user.password) throw new Error("Password incorrect");
+  return user;
 };
 export default validateAuth;

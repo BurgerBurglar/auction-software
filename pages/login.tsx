@@ -25,6 +25,7 @@ import axios from "axios";
 import { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
+import { useRouter } from "next/router";
 import { FormEvent, useState } from "react";
 interface Props {}
 const Login: NextPage<Props> = () => {
@@ -46,17 +47,24 @@ const Login: NextPage<Props> = () => {
     });
   };
 
+  const router = useRouter();
+
   const auth = async () => {
-    const response = await axios.post<boolean>("/api/validate", {
-      usernameOrEmail,
-      password,
-    });
-    return response.data;
+    try {
+      await axios.post("/api/login", {
+        usernameOrEmail,
+        password,
+      });
+      router.push("/welcome");
+    } catch (err) {
+      if (!axios.isAxiosError(err)) return;
+      console.log(err.response?.data.error);
+    }
   };
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    auth().then(console.log);
+    auth();
   };
 
   return (
