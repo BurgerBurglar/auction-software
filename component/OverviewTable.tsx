@@ -21,6 +21,13 @@ const OverviewTable: React.FC<TableProps> = ({ overviews }) => {
     [overviews, sortableCols]
   );
 
-  return <DataTable columns={columns} data={overviews} />;
+  return (
+    <DataTable
+      columns={columns}
+      data={overviews}
+      pagination
+      paginationPerPage={2}
+    />
+  );
 };
 export default OverviewTable;
