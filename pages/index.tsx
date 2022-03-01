@@ -1,5 +1,4 @@
 import type { GetStaticProps, NextPage } from "next";
-import Head from "next/head";
 import OverviewTable from "../component/OverviewTable";
 import { getOverview } from "../prisma/queries";
 import { Overview } from "../types";

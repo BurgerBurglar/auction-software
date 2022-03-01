@@ -22,13 +22,13 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import axios from "axios";
-import { GetStaticProps, NextPage } from "next";
+import { NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { FormEvent, useState } from "react";
-interface Props {}
-const Login: NextPage<Props> = () => {
+
+const Login: NextPage = () => {
   const [usernameOrEmail, setUsernameOrEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -169,8 +169,5 @@ const Login: NextPage<Props> = () => {
       </Container>
     </>
   );
-};
-export const getStaticProps: GetStaticProps<Props> = async () => {
-  return { props: {} };
 };
 export default Login;

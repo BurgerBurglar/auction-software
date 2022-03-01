@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import validateAuth from "../../utils/auth";
 import cookie from "cookie";
 
-const ok = (user: any, res: NextApiResponse) => {
+const sendOkResponse = (user: any, res: NextApiResponse) => {
   res.setHeader(
     "Set-Cookie",
     cookie.serialize("qid", JSON.stringify(user), {
@@ -19,7 +19,10 @@ const ok = (user: any, res: NextApiResponse) => {
 const loginRoute = async (req: NextApiRequest, res: NextApiResponse) => {
   const { usernameOrEmail, password } = req.body;
   if (usernameOrEmail === "test" && password === "123") {
-    ok({ username: "test", first_name: "Rajesh", last_name: "Rajaram" }, res);
+    sendOkResponse(
+      { username: "test", first_name: "Rajesh", last_name: "Rajaram" },
+      res
+    );
   }
 
   try {
@@ -28,7 +31,7 @@ const loginRoute = async (req: NextApiRequest, res: NextApiResponse) => {
       password
     );
     const user = { username, first_name, last_name };
-    ok(user, res);
+    sendOkResponse(user, res);
   } catch (err) {
     res.status(403).send({ error: (err as any).message });
   }
